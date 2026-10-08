@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<!-- PostHog Analytics, EU endpoint, consent-gated -->
+<script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Pn On init Wn Qn ki Gn Kn zn capture calculateEventProperties rs register register_once register_for_session unregister unregister_for_session os getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync ls identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty ns es createPersonProfile setInternalOrTestUser ss Hn cs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Yn debug Ci gr getPageViewId captureTraceFeedback captureTraceMetric qn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+
+    posthog.init('phc_ozweFkkTr9KtcQmuiTQHfjf3CiFv2hE2dKqwszmWutKv', {
+      api_host: 'https://eu.i.posthog.com',
+      defaults: '2026-05-30',
+      person_profiles: 'identified_only',
+      opt_out_capturing_by_default: true,
+      session_recording: {
+        maskAllInputs: true,
+      },
+      loaded: function (ph) {
+        if (ph.get_explicit_consent_status() === 'pending') {
+          var banner = document.getElementById('cookie-banner');
+          if (banner) banner.style.display = 'flex';
+        }
+      },
+    });
+  </script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Case Study: Usability Testing of a Multimedia Storytelling Tool | Sebastian Weber</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --dark: #0F1117; --coral: #E06040; --coral-bg: #FDF0EC; --accent: var(--coral);
+      --white: #FFFFFF; --paper: #FAFAFA; --text: #1A1A1A;
+      --muted: #7A7A7A; --border: #E0DEDA; --border-light: #EEECE8; --neutral: #F4F2EF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', system-ui, sans-serif; background: var(--paper); color: var(--text); line-height: 1.7; }
+    #progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.1s; z-index: 100; }
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(250,250,250,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 56px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links a, .nav-current { font-size: 13px; color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-current { color: var(--text); font-weight: 700; }
+    .nav-flex-item { display: inline-block; min-width: 76px; text-align: center; }
+
+    .lang-switch { display: flex; align-items: center; gap: 6px; }
+    .lang-switch button {
+      font-family: inherit; background: none; border: none;
+      font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; padding: 2px;
+      transition: color 0.15s;
+    }
+    .lang-switch button:hover { color: var(--text); }
+    .lang-switch button.active { color: var(--text); font-weight: 700; }
+    .lang-switch .sep { color: var(--border); }
+
+    .subnav {
+      position: sticky; top: 56px; z-index: 40;
+      background: rgba(250,250,250,0.94); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: flex-end; gap: 24px;
+      padding: 0 48px; height: 44px; align-items: center;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .subnav::-webkit-scrollbar { display: none; }
+    .subnav a {
+      font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none;
+      white-space: nowrap; padding: 4px 2px; border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s; flex-shrink: 0;
+    }
+    .subnav a:hover { color: var(--text); }
+    .subnav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+    @media (max-width: 860px) { .subnav { padding: 0 20px; } }
+    @media (max-width: 640px) { .subnav { display: none; } }
+
+    .nav-drawer__subnav-toggle-item { margin-top: 28px; }
+    .nav-drawer__subnav-label { display: flex; align-items: center; padding: 16px 4px; min-height: 44px; font-size: 18px; font-weight: 500; color: var(--muted); }
+    .nav-drawer__subnav-list { list-style: none; margin: 0; padding: 0; }
+    .nav-drawer__subnav-list li { border-bottom: 1px solid var(--border); }
+    .nav-drawer__subnav-list li:last-child { border-bottom: none; }
+    .nav-drawer__subnav-list a.subnav-drawer-item { display: flex; align-items: center; padding: 16px 4px 16px 22px; text-decoration: none; font-size: 18px; min-height: 44px; color: var(--muted); font-weight: 500; }
+    .nav-drawer__subnav-list a.subnav-drawer-item.active { color: var(--accent); font-weight: 700; }
+
+    .hero { padding: 140px 48px 80px; max-width: 720px; margin: 0 auto; }
+    .hero-label { font-size: 11px; font-weight: 600; color: var(--coral); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .hero-label::before { content: ''; display: block; width: 32px; height: 1.5px; background: var(--coral); }
+    h1 { font-size: clamp(28px, 4vw, 48px); font-weight: 700; line-height: 1.15; color: var(--dark); margin-bottom: 16px; letter-spacing: -0.01em; }
+    .hero-sub { font-size: 20px; color: var(--muted); font-style: italic; max-width: 580px; line-height: 1.65; margin-bottom: 40px; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 24px; }
+    .meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .hero-image { margin-top: 40px; border: 1px solid var(--border); overflow: hidden; background: var(--white); box-shadow: 0 16px 40px rgba(15,17,23,0.06); }
+    img[onclick] { cursor: zoom-in; }
+    #lightbox { display: none; position: fixed; inset: 0; background: rgba(10,11,15,0.92); z-index: 300; align-items: center; justify-content: center; padding: 40px; cursor: zoom-out; }
+    #lightbox.visible { display: flex; }
+    #lightbox img { max-width: 100%; max-height: 100%; border: 1px solid rgba(255,255,255,0.15); }
+    #lightbox-close { position: fixed; top: 24px; right: 32px; color: #fff; font-size: 32px; line-height: 1; cursor: pointer; z-index: 301; background: none; border: none; }
+    .hero-image img { width: 100%; display: block; }
+    .meta-box { display: grid; grid-template-columns: 1fr 1fr; row-gap: 28px; column-gap: 24px; border: 1.5px dashed var(--border); border-radius: 16px; padding: 28px 40px; margin-top: 32px; }
+    .meta-col { text-align: center; }
+    .meta-label-box { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dark); margin-bottom: 10px; }
+    .meta-value-box { font-size: 14px; color: var(--text); line-height: 1.5; }
+    .meta-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .meta-value { font-size: 13px; color: var(--text); font-weight: 500; }
+    .content { max-width: 720px; margin: 0 auto; padding: 0 48px 120px; }
+    .block { padding: 64px 0; border-top: 1px solid var(--border); opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .block.visible { opacity: 1; transform: translateY(0); }
+    .block-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--coral); margin-bottom: 16px; }
+    h2 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 20px; letter-spacing: -0.01em; line-height: 1.3; }
+    p { font-size: 15px; color: var(--text); margin-bottom: 18px; line-height: 1.75; }
+    ol { font-size: 15px; color: var(--text); line-height: 1.75; }
+    .callout { background: #F5E5E0; color: var(--dark); padding: 24px 28px; border-radius: 12px; margin: 32px 0; font-style: italic; font-size: 18px; line-height: 1.5; font-weight: 300; border-left: 4px solid #C87255; }
+    .img-block { margin: 28px 0; }
+    .img-block img { width: 100%; border: 1px solid var(--border); display: block; }
+    .img-caption { font-size: 11px; color: var(--muted); margin-top: 8px; font-weight: 500; letter-spacing: 0.04em; }
+    .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .img-grid-item img { width: 100%; border: 1px solid var(--border); display: block; }
+    .img-grid-item .img-caption { font-size: 11px; color: var(--muted); margin-top: 8px; font-weight: 500; }
+    .process { display: grid; gap: 16px; margin: 28px 0; }
+    .process-step { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 22px 24px; display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start; }
+    .step-num { width: 40px; height: 40px; border-radius: 10px; background: var(--coral); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; flex-shrink: 0; }
+    .step-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--dark); }
+    .step-body { font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+    .step-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+    .step-tag.missing-input { background: var(--neutral); color: var(--muted); }
+    .step-tag.unverified-output { background: var(--coral-bg); color: var(--coral); }
+    .disclaimer { background: var(--neutral); border-radius: 10px; padding: 20px 24px; margin: 28px 0; font-size: 13px; color: var(--muted); line-height: 1.65; border-left: 3px solid var(--border); }
+    table.findings { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13px; }
+    table.findings th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 10px 12px; border-bottom: 1.5px solid var(--dark); }
+    table.findings td { padding: 12px; border-bottom: 1px solid var(--border-light); vertical-align: top; color: var(--text); }
+    table.findings tr:last-child td { border-bottom: none; }
+    .cta-block { background: #F2E6E3; border-radius: 16px; padding: 48px; text-align: center; margin-top: 80px; }
+    .cta-block h2 { color: #1A1A1A; margin-bottom: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; background: var(--coral); color: var(--white); padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.15s; }
+    .btn:hover { background: #E88F71; color: var(--white); }
+    footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto; }
+    footer p { font-size: 12px; color: var(--muted); margin: 0; }
+
+    #cookie-banner {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: #0F1117; color: #fff;
+      padding: 16px 24px; border-radius: 12px;
+      display: flex; align-items: center; gap: 16px;
+      z-index: 200; font-size: 13px;
+      max-width: 560px; width: calc(100% - 48px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    #cookie-banner p { margin: 0; flex: 1; color: #ccc; line-height: 1.5; }
+    #cookie-banner a { color: #fff; }
+    .cookie-btn { padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; white-space: nowrap; font-family: inherit; }
+    .cookie-accept { background: var(--coral); color: #fff; }
+    .cookie-decline { background: transparent; color: #ccc; border: 1px solid #555 !important; }
+
+    @media (max-width: 860px) {
+      nav { padding: 0 20px; } .hero { padding: 120px 20px 60px; } .content { padding: 0 20px 80px; }
+      footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
+      .img-grid { grid-template-columns: 1fr; }
+      .meta-box { grid-template-columns: 1fr; }
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .nav-toggle svg { display: block; }
+
+    .nav-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      height: 100%;
+      width: min(78vw, 320px);
+      background: var(--paper);
+      z-index: 200;
+      padding: 20px;
+      transform: translateX(100%);
+      transition: transform 0.28s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+    }
+    .nav-drawer[data-open="true"] { transform: translateX(0); }
+
+    .nav-drawer__header { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+    .nav-drawer__close { background: none; border: none; padding: 8px; cursor: pointer; color: var(--text); }
+
+    .nav-drawer__links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+    .nav-drawer__links li { border-bottom: 1px solid var(--border); }
+    .nav-drawer__links a,
+    .nav-drawer__links .nav-current {
+      display: flex; align-items: center; padding: 16px 4px;
+      text-decoration: none; font-size: 18px; min-height: 44px;
+    }
+    .nav-drawer__links a { color: var(--muted); font-weight: 500; }
+    .nav-drawer__links .nav-current { color: var(--text); font-weight: 700; }
+
+    .nav-drawer__lang { display: flex; gap: 6px; padding: 16px 4px; }
+    .nav-drawer__lang button {
+      font-family: inherit; background: none; border: none;
+      font-size: 16px; font-weight: 500; color: var(--muted); cursor: pointer; padding: 4px;
+    }
+    .nav-drawer__lang button.active { color: var(--text); font-weight: 700; }
+    .nav-drawer__lang .sep { color: var(--border); }
+
+    .nav-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15, 17, 23, 0.55);
+      z-index: 150;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .nav-overlay[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-drawer, .nav-overlay { transition: none; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: block; }
+    }
+
+    .quote { font-size: 15px; font-style: italic; color: var(--dark); border-left: 3px solid var(--coral); padding: 4px 0 4px 16px; margin: 14px 0 0; }
+    .block > .quote { margin: 20px 0 28px; }
+    .quote span { display: block; font-style: normal; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; margin-top: 4px; }
+    .bars { display: grid; gap: 12px; margin: 28px 0 36px; }
+    .bar-row { display: grid; grid-template-columns: 150px 1fr 56px; gap: 14px; align-items: center; font-size: 13px; }
+    .bar-label { color: var(--text); font-weight: 500; }
+    .bar-track { background: var(--neutral); height: 14px; border-radius: 4px; overflow: hidden; }
+    .bar-fill { display: block; height: 100%; background: var(--coral); border-radius: 0 4px 4px 0; }
+    .bar-value { color: var(--muted); font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+    .bar-row:hover .bar-fill { background: #C84E30; }
+    @media (max-width: 520px) { .bar-row { grid-template-columns: 1fr 52px; } .bar-label { grid-column: 1 / -1; } }
+    table.findings th:first-child, table.findings td:first-child { white-space: nowrap; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 28px 0 20px; }
+    .stat { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 20px 16px; display: flex; flex-direction: column; gap: 6px; text-align: center; align-items: center; }
+    .stat-icon { color: var(--coral); margin: 0 auto 8px; display: block; }
+    .stat-num { font-size: 32px; font-weight: 700; color: var(--dark); line-height: 1; font-variant-numeric: tabular-nums; }
+    .stat-label { font-size: 12px; color: var(--muted); line-height: 1.45; font-weight: 500; }
+    .stats-total { grid-template-columns: minmax(0, 1fr); max-width: calc((100% - 24px) / 3); margin-left: auto; margin-right: auto; }
+    @media (max-width: 520px) { .stats-devices { gap: 8px; } .stats-devices .stat { padding: 16px 8px; } .stats-total { max-width: 60%; } .stat-num { font-size: 28px; } .stats-devices .stat-label { font-size: 11px; } }
+  </style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="cookie-banner" style="display:none;">
+<p data-de="k0">This site uses PostHog for privacy-focused analytics, hosted on EU servers. <a href="https://sebastian-weber.github.io/uxui-portfolio/datenschutz.html" target="_blank">Privacy Policy</a></p>
+<button class="cookie-btn cookie-decline" data-de="k1" onclick="decideConsent(false)">Decline</button>
+<button class="cookie-btn cookie-accept" data-de="k2" onclick="decideConsent(true)">Accept</button>
+</div>
+<div id="lightbox" onclick="closeLightbox()">
+<button id="lightbox-close" onclick="closeLightbox()">×</button>
+<img alt="" id="lightbox-img" src=""/>
+</div>
+<nav>
+<a aria-label="Sebastian Weber - Home" class="logo" href="https://sebastian-weber.github.io/uxui-portfolio/index.html" style="display:flex;align-items:center;line-height:0;margin-right:8px;"><svg aria-hidden="true" fill="none" focusable="false" height="40" style="display:block;margin-top:-2px;" viewbox="0 0 32 32" width="40" xmlns="http://www.w3.org/2000/svg"><path d="M0 19.0413V20.7092L15.9986 26.8336V25.3991L11.7131 23.7928V23.7848L10.3368 23.2366L1.51283 19.9819L10.3384 16.7504V16.7576L11.7146 16.2587L16.0001 14.6524V13.1113L0 19.0413Z" fill="#0F1117"></path><path d="M16.0001 24.0696V22.4023L0 16.2773V17.7113L4.2859 19.317V19.3279L5.66227 19.8759L14.4871 23.1294L5.66227 26.3619V26.3546L4.2859 26.8534L0 28.4591V29.9996L16.0001 24.0696Z" fill="#0F1117"></path><path d="M20.3237 26.8333H22.1382L28.8006 11H27.2401L25.4927 15.242H25.4809L24.8844 16.6032L21.3438 25.3361L17.826 16.6032H17.8339L17.2911 15.242L15.5436 11H13.8672L20.3237 26.8333Z" fill="#0F1117"></path><path d="M23.5229 26.8333H25.3374L31.9998 11H30.4394L28.6919 15.2418H28.6801L28.0837 16.603L24.543 25.3354L21.0252 16.603H21.0331L20.4903 15.2418L18.7429 11H17.0664L23.5229 26.8333Z" fill="#0F1117"></path></svg></a>
+<ul class="nav-links">
+<li><span aria-current="page" class="nav-current" data-de="nav-portfolio" data-i18n="nav-portfolio">Portfolio</span></li>
+<li><a class="nav-flex-item" data-de="nav-about" data-i18n="nav-about" href="https://sebastian-weber.github.io/uxui-portfolio/about.html">About</a></li>
+<li><a class="nav-flex-item" data-de="nav-imprint" data-i18n="nav-imprint" href="https://sebastian-weber.github.io/uxui-portfolio/datenschutz.html">Imprint</a></li>
+<li>
+<span class="lang-switch">
+<button data-lang="de" type="button">DE</button>
+<span class="sep">|</span>
+<button class="active" data-lang="en" type="button">EN</button>
+</span>
+</li>
+<li><a href="https://linkedin.com/in/sebastian-weber1708" target="_blank">LinkedIn</a></li>
+</ul>
+<button aria-controls="navDrawer" aria-expanded="false" aria-label="Menü öffnen" class="nav-toggle" id="navToggle">
+<svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg>
+</button>
+</nav>
+<div aria-label="Sections on this page" class="subnav" id="subnav"></div>
+<div class="nav-overlay" data-open="false" id="navOverlay"></div>
+<aside aria-hidden="true" class="nav-drawer" data-open="false" id="navDrawer">
+<div class="nav-drawer__header">
+<button aria-label="Menü schließen" class="nav-drawer__close" id="navDrawerClose">
+<svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<ul class="nav-drawer__links">
+<li><span aria-current="page" class="nav-current" data-de="nav-portfolio" data-i18n="nav-portfolio">Portfolio</span></li>
+<li><a data-de="nav-about" data-i18n="nav-about" href="https://sebastian-weber.github.io/uxui-portfolio/about.html">About</a></li>
+<li><a data-de="nav-imprint" data-i18n="nav-imprint" href="https://sebastian-weber.github.io/uxui-portfolio/datenschutz.html">Imprint</a></li>
+<li>
+<div class="nav-drawer__lang">
+<button data-lang="de" type="button">DE</button>
+<span class="sep">|</span>
+<button class="active" data-lang="en" type="button">EN</button>
+</div>
+</li>
+<li><a href="https://linkedin.com/in/sebastian-weber1708" target="_blank">LinkedIn</a></li>
+<li class="nav-drawer__subnav-toggle-item" hidden="" id="drawerSubnavToggleItem">
+<span class="nav-drawer__subnav-label" data-de="sub-label">On this page</span>
+</li>
+<li class="nav-drawer__subnav-list-item" hidden="" id="drawerSubnavListItem">
+<ul class="nav-drawer__subnav-list" id="drawerSubnavList"></ul>
+</li>
+</ul>
+</aside>
+<section class="hero">
+<div class="hero-label" data-de="k3">Case Study · User Research</div>
+<h1 data-de="k4">Usability Testing of a Multimedia Storytelling Tool</h1>
+<p class="hero-sub" data-de="k5">Can readers use the interactive page types of a multimedia storytelling tool intuitively? A moderated usability study with 18 participants on desktop and mobile shows what came easily to them and where they ran into difficulties.</p>
+<div class="hero-image"><img src="img/hero-usability-study.png" alt="Wireframe of a scroll-based multimedia story on desktop and smartphone, with four numbered markers for the main findings" onclick="openLightbox(this.src)"></div>
+<div class="meta-box">
+<div class="meta-col">
+<div class="meta-label-box" data-de="k6">Project</div>
+<div class="meta-value-box" data-de="k7">Multimedia storytelling tool<br/>Master's project, RH Köln (then RFH)</div>
+</div>
+<div class="meta-col">
+<div class="meta-label-box" data-de="k8">My Role</div>
+<!-- TODO Sebastian: Rolle präzisieren (Anzahl eigener Sessions, Moderator/Protokollant) -->
+<div class="meta-value-box" data-de="k9">Discussion guide (co-author), session moderation &amp; note-taking<br/>Participant and questionnaire analysis</div>
+</div>
+<div class="meta-col">
+<div class="meta-label-box" data-de="k10">Methods</div>
+<div class="meta-value-box" data-de="k11">Moderated usability testing, think-aloud<br/>Semi-structured interview, post-test questionnaire</div>
+</div>
+<div class="meta-col">
+<div class="meta-label-box" data-de="k12">Timeline</div>
+<div class="meta-value-box" data-de="k13">2019<br/>Group project, usability lab</div>
+</div>
+</div>
+</section>
+<main class="content">
+<section class="block" id="context" style="border-top: none; padding-top: 0;">
+<div class="block-label" data-de="k14">01 · Context</div>
+<h2 data-de="k15">Multimedia storytelling with its own interaction logic</h2>
+<p data-de="k16">The tested tool is used by a German media company to publish scroll-based multimedia stories. A single story combines up to ten page types: background video, collage, video, background image, text, hotspots, audio, before/after comparison, 360° image and a list of external links.</p>
+<p data-de="k17">As part of a cooperation between the university and the company, our group tested a sample story on street food. Two questions guided the study:</p>
+<div class="callout" data-de="callout1">Can the page types be used intuitively? And which obstacles do users run into while exploring them?</div>
+</section>
+<section class="block" id="method">
+<div class="block-label" data-de="k18">02 · Method</div>
+<h2 data-de="k19">60 minutes per participant, from usage context to navigation tasks</h2>
+<p data-de="k20">Two students ran each session: one person moderated, the other took notes. Participants thought aloud throughout. The discussion guide moved from open to specific:</p>
+<div class="process">
+<div class="process-step">
+<div class="step-num">1</div>
+<div>
+<div class="step-title" data-de="k21">Usage context · 10 min</div>
+<p class="step-body" data-de="k22">How, where, how often and on which device participants consume longer-form content.</p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">2</div>
+<div>
+<div class="step-title" data-de="k23">Free exploration · 5 min</div>
+<p class="step-body" data-de="k24">First impression without any task, in the setting participants had described as their preferred one.</p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">3</div>
+<div>
+<div class="step-title" data-de="k25">Page types in detail · 25 min</div>
+<p class="step-body" data-de="k26">One short task per page type, followed by probing questions on what worked and what didn't.</p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">4</div>
+<div>
+<div class="step-title" data-de="k27">Global navigation · 10 min</div>
+<p class="step-body" data-de="k28">Orientation and navigation tasks: find chapter 2, hide the text, open the overview.</p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">5</div>
+<div>
+<div class="step-title" data-de="k29">Post-test interview &amp; questionnaire</div>
+<p class="step-body" data-de="k30">Where and why participants would have dropped off, favourite and least favourite page types, and five-point ratings on appearance, navigation, readability, labelling, learnability and speed.</p>
+</div>
+</div>
+</div>
+<div class="stats stats-total">
+        <div class="stat"><svg class="stat-icon" aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6.5" r="5"/><rect x="2.5" y="13" width="19" height="9" rx="2.5"/></svg><span class="stat-num">18</span><span class="stat-label" data-de="st1">participants<br>(aged 19 to 58)</span></div>
+      </div>
+      <p data-de="st5">Eleven women and seven men took part. All sessions took place in the usability lab at RH Köln. Participants could use a provided device or their own smartphone.</p>
+      <div class="stats stats-devices">
+        <div class="stat"><svg class="stat-icon" aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><rect x="11" y="16" width="2" height="4"/><rect x="7.5" y="19.5" width="9" height="2" rx="1"/></svg><span class="stat-num">8</span><span class="stat-label" data-de="st2">on desktop</span></div>
+        <div class="stat"><svg class="stat-icon" aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="1.5" width="12" height="21" rx="2.5"/><circle cx="12" cy="19" r="1" fill="var(--white)"/></svg><span class="stat-num">9</span><span class="stat-label" data-de="st3">on mobile<br>(7 Android, 2 iOS)</span></div>
+        <div class="stat"><svg class="stat-icon" aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><rect x="1.5" y="4" width="21" height="16" rx="2.5"/><circle cx="19" cy="12" r="1" fill="var(--white)"/></svg><span class="stat-num">1</span><span class="stat-label" data-de="st4">on tablet</span></div>
+      </div>
+<p data-de="k37">For the analysis, insights were extracted per interview and ranked by the number of sessions in which they appeared.</p>
+</section>
+<section class="block" id="worked">
+<div class="block-label" data-de="k60">03 · What Worked</div>
+<h2 data-de="k61">Self-directed page types won</h2>
+<p data-de="k62">Asked for their favourites, participants named <strong>hotspots</strong> (9), <strong>before/after</strong> (7) and the <strong>360° image</strong> (6), all page types where the reader decides what to look at next. The plain text page was described as calm and tidy. Overall, participants understood the basic concept and enjoyed discovering hidden content.</p>
+<p class="quote" data-de="k63">"I like that I can decide for myself what to look at first." <span>M 24</span></p>
+</section>
+<section class="block" id="findings">
+<div class="block-label" data-de="k38">04 · Where It Broke Down</div>
+<h2 data-de="k39">Three of four navigation tasks broke down on mobile</h2>
+<p data-de="k40">Participants enjoyed exploring the page types. The global navigation was a different story. Share of participants who could not complete each task:</p>
+<div aria-label="Task failure rates, n = 18" class="bars" role="table">
+<div class="bar-row" role="row" title="Hide the text: 12 of 18 failed, 10 of them on mobile">
+<span class="bar-label" data-de="k41" role="cell">Hide the text</span>
+<span class="bar-track"><span class="bar-fill" style="width: 66.7%"></span></span>
+<span class="bar-value" role="cell">12 / 18</span>
+</div>
+<div class="bar-row" role="row" title="Open the overview: 10 of 18 failed, all on mobile, where the feature is not available">
+<span class="bar-label" data-de="k42" role="cell">Open the overview</span>
+<span class="bar-track"><span class="bar-fill" style="width: 55.6%"></span></span>
+<span class="bar-value" role="cell">10 / 18</span>
+</div>
+<div class="bar-row" role="row" title="Tell where you are: 9 of 18 could not">
+<span class="bar-label" data-de="k43" role="cell">Tell where you are</span>
+<span class="bar-track"><span class="bar-fill" style="width: 50%"></span></span>
+<span class="bar-value" role="cell">9 / 18</span>
+</div>
+<div class="bar-row" role="row" title="Go to chapter 2: 8 of 18 failed, all on mobile">
+<span class="bar-label" data-de="k44" role="cell">Go to chapter 2</span>
+<span class="bar-track"><span class="bar-fill" style="width: 44.4%"></span></span>
+<span class="bar-value" role="cell">8 / 18</span>
+</div>
+</div>
+<div class="process">
+<div class="process-step">
+<div class="step-num">1</div>
+<div>
+<span class="step-tag unverified-output" data-de="k45">Mobile</span>
+<div class="step-title" data-de="k46">Chapters without a visible start</div>
+<p class="step-body" data-de="k47">All eight participants who could not reach chapter 2 were on mobile. Once the colour coding of the navigation bar wasn't understood, nothing else on the page marked where a chapter begins. Most scrolled on hoping to stumble across it, then gave up.</p>
+<p class="quote" data-de="k48">"Where is chapter 2?" <span>W 32, mobile</span></p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">2</div>
+<div>
+<span class="step-tag unverified-output" data-de="k49">Mobile</span>
+<div class="step-title" data-de="k50">A gesture nobody was told about</div>
+<p class="step-body" data-de="k51">On mobile, text is hidden by swiping left. Nothing on screen says so. Ten of the twelve failed attempts were on mobile, where the feature could only be found by trial and error. It also didn't work on every page type.</p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">3</div>
+<div>
+<span class="step-tag missing-input" data-de="k52">All devices</span>
+<div class="step-title" data-de="k53">A navigation bar read as a loading bar</div>
+<p class="step-body" data-de="k54">Half of the participants could not say where they were in the story. The green fill marking the current chapter was read as a progress or loading indicator.</p>
+<p class="quote" data-de="k55">"Why is one half green? That could be mistaken for a progress marker." <span>M 22, desktop</span></p>
+</div>
+</div>
+<div class="process-step">
+<div class="step-num">4</div>
+<div>
+<span class="step-tag missing-input" data-de="k56">Page type</span>
+<div class="step-title" data-de="k57">Video behind text competes with reading</div>
+<p class="step-body" data-de="k58">16 of 18 participants found the background video distracting while reading. It was also the least liked page type. Autoplay, no pause and no direct mute came up repeatedly.</p>
+<p class="quote" data-de="k59">"It's too much at once. Reading takes me three times as long." <span>Participant</span></p>
+</div>
+</div>
+</div>
+<div class="callout">The common thread: features that depend on an invisible gesture or an unexplained colour code weren't discovered. In Nielsen's terms, a gap in visibility of system status and a reliance on recall instead of recognition.</div>
+</section>
+<section class="block" id="expectations">
+<div class="block-label" data-de="k64">05 · Expectations</div>
+<h2 data-de="k65">Readers wanted an overview before committing</h2>
+<p data-de="k66">Seven participants missed an overview at the start, a kind of table of contents to judge whether the story was worth their time. Among those who described a mental model, a book came up most often, matching the wish for more depth of information.</p>
+<p class="quote" data-de="k67">"What is this actually about? What do I get out of watching this?" <span>W 54, desktop</span></p>
+<p data-de="k68">The commitment question confirmed it: only 4 of 18 would have watched the full story at home without condition, 7 only if interested in the topic, 7 not at all. Reasons for dropping off split between content, usability and length.</p>
+<p data-de="k69">At the client's request, we also tested the label "Multimedia-Reportage". 14 of 18 found it unsuitable: "multimedia" sounded dated, "Reportage" sounded like a TV news piece rather than something interactive.</p>
+</section>
+<section class="block" id="recommendations">
+<div class="block-label" data-de="k70">06 · Recommendations</div>
+<h2 data-de="k71">Make the hidden visible, starting with mobile</h2>
+<table class="findings">
+<thead><tr><th>#</th><th data-de="k73">Recommendation</th><th data-de="k74">Addresses</th></tr></thead>
+<tbody>
+<tr><td>1</td><td data-de="k76">Add visible chapter markers to the mobile version and simplify chapter navigation</td><td data-de="k77">8/18 could not reach chapter 2</td></tr>
+<tr><td>2</td><td data-de="k79">Offer "hide text" directly on the page with a visible hint, and disable it where it doesn't work</td><td data-de="k80">12/18 could not hide the text</td></tr>
+<tr><td>3</td><td data-de="k82">Bring the overview page to mobile and add a table of contents at the start</td><td data-de="k83">10/18 could not open it; 7/18 asked for an overview</td></tr>
+<tr><td>4</td><td data-de="k85">Rework the colour coding of the navigation bar so it reads as position, not progress</td><td data-de="k86">9/18 could not tell where they were</td></tr>
+<tr><td>5</td><td data-de="k88">No autoplay with sound; give background video pause and mute controls</td><td data-de="k89">16/18 found it distracting</td></tr>
+<tr><td>6</td><td data-de="k91">Move calls to action from the bottom to the top of each page type; rename "Erste Seite" to "Home"</td><td data-de="k92">Scroll hint too small and badly placed</td></tr>
+</tbody>
+</table>
+</section>
+<section class="block" id="my-part">
+<div class="block-label" data-de="k93">07 · My Part</div>
+<h2 data-de="k94">Participant groups and the post-test questionnaire</h2>
+<p data-de="k95">Within the group, I analysed the participant structure and the post-test questionnaire, comparing ratings by device (desktop vs. mobile) and age group (younger vs. older).</p>
+<p data-de="k96">Recruiting through personal networks skewed the sample young, and finding older participants willing to travel to the lab for an hour was the main challenge. With eight to ten people per group, the comparisons served as directional signals that guided where to look in the qualitative data:</p>
+<ul style="padding-left: 20px; margin-bottom: 18px;">
+<li data-de="k97" style="margin-bottom: 10px;">Older participants tended to rate learnability, navigation and visual appearance lower than younger ones.</li>
+<li data-de="k98" style="margin-bottom: 10px;">Mobile participants rated the navigation bar and icons as harder to understand, which matches the task failures above.</li>
+<li data-de="k99">Desktop participants rated navigation through the content as more frustrating.</li>
+</ul>
+</section>
+<section class="block" id="reflection">
+<div class="block-label" data-de="k100">08 · Reflection</div>
+<h2 data-de="k101">What I would add today</h2>
+<p data-de="k102">The study's strength was its structure: one guide, one task per page type, and the same navigation tasks for every participant, which made failures directly comparable across devices. Today I would add severity ratings to the findings so that the recommendations are prioritised by impact as well as frequency, and I would size any group comparison to the claim it has to support.</p>
+<p data-de="k103">The step I would add most of all is the one this portfolio is built around: prototyping the mobile chapter navigation in code and testing it again with the same tasks.</p>
+</section>
+<div class="cta-block">
+<h2 data-de="k104">All Projects</h2>
+<a class="btn" data-de="k105" href="https://sebastian-weber.github.io/uxui-portfolio/">To the project overview →</a>
+</div>
+</main>
+<footer>
+<p data-de="k106">Sebastian Weber · UI Designer · Design-to-Code · Cologne 2026</p>
+<p><a href="https://linkedin.com/in/sebastian-weber1708" style="color: var(--muted); text-decoration: none;">LinkedIn</a> · <a data-de="f-imprint" href="https://sebastian-weber.github.io/uxui-portfolio/datenschutz.html" style="color: var(--muted); text-decoration: none;">Legal Notice &amp; Privacy Policy</a> · <a data-de="f-cookie" href="#" id="cookie-settings-link" style="color: var(--muted); text-decoration: none;">Cookie Settings</a></p>
+</footer>
+<script>
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('visible');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('visible');
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    function decideConsent(accepted) {
+      document.getElementById('cookie-banner').style.display = 'none';
+      if (accepted) {
+        posthog.opt_in_capturing();
+      } else {
+        posthog.opt_out_capturing();
+      }
+      posthog.capture('cookie_consent', { accepted: accepted });
+    }
+
+    document.getElementById('cookie-settings-link').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('cookie-banner').style.display = 'flex';
+    });
+
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      document.getElementById('progress').style.width = (scrolled / total * 100) + '%';
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.block').forEach(b => observer.observe(b));
+
+    /* Dynamische Subnav (sticky, rechtsbündig) + Drawer-Abschnitt aus .block[id] */
+    (function () {
+      var blocks = Array.prototype.slice.call(document.querySelectorAll('main.content .block[id]'));
+      if (!blocks.length) return;
+      var items = blocks.map(function (block) {
+        var label = block.getAttribute('data-nav-label');
+        if (!label) {
+          var labelEl = block.querySelector('.block-label');
+          label = labelEl ? labelEl.textContent : block.id;
+          label = label.replace(/^[0-9]+[a-z]?\s*[·\u00b7\-–]\s*/i, '').trim();
+        }
+        return { id: block.id, label: label };
+      });
+
+      var subnav = document.getElementById('subnav');
+      if (subnav) {
+        items.forEach(function (item) {
+          var a = document.createElement('a');
+          a.href = '#' + item.id; a.textContent = item.label; a.dataset.target = item.id;
+          subnav.appendChild(a);
+        });
+      }
+
+      var toggleItem = document.getElementById('drawerSubnavToggleItem');
+      var listItem = document.getElementById('drawerSubnavListItem');
+      var listEl = document.getElementById('drawerSubnavList');
+      if (toggleItem && listItem && listEl) {
+        toggleItem.hidden = false;
+        listItem.hidden = false;
+        items.forEach(function (item) {
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = '#' + item.id; a.textContent = item.label; a.className = 'subnav-drawer-item'; a.dataset.target = item.id;
+          li.appendChild(a);
+          listEl.appendChild(li);
+        });
+      }
+
+      var allNavLinks = document.querySelectorAll('.subnav a, .subnav-drawer-item');
+      var activeObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var id = entry.target.id;
+          allNavLinks.forEach(function (link) { link.classList.toggle('active', link.dataset.target === id); });
+          var activeDesktop = subnav && subnav.querySelector('a.active');
+          if (activeDesktop) { activeDesktop.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+      blocks.forEach(function (block) { activeObserver.observe(block); });
+    })();
+  </script>
+<script>
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var closeBtn = document.getElementById('navDrawerClose');
+    var drawer = document.getElementById('navDrawer');
+    var overlay = document.getElementById('navOverlay');
+    var lastFocused = null;
+
+    function openDrawer() {
+      lastFocused = document.activeElement;
+      drawer.setAttribute('data-open', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      overlay.setAttribute('data-open', 'true');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+      document.addEventListener('keydown', onKeydown);
+    }
+
+    function closeDrawer() {
+      drawer.setAttribute('data-open', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      overlay.setAttribute('data-open', 'false');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeydown);
+      if (lastFocused) lastFocused.focus();
+    }
+
+    function onKeydown(e) {
+      if (e.key === 'Escape') closeDrawer();
+      if (e.key === 'Tab') {
+        var focusables = drawer.querySelectorAll('a, button');
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    }
+
+    toggle.addEventListener('click', openDrawer);
+    closeBtn.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    var drawerLangButtons = document.querySelectorAll('.nav-drawer__lang [data-lang]');
+    drawerLangButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var lang = btn.getAttribute('data-lang');
+        if (typeof window.switchLang === 'function') {
+          window.switchLang(lang);
+        }
+        document.querySelectorAll('[data-lang]').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+        });
+      });
+    });
+  })();
+  </script>
+
+  <script>
+  /* ===== i18n EN/DE (shared key sw-lang) ===== */
+  (function () {
+    var LANG_KEY = 'sw-lang';
+    var DE = {
+      "st1": "Probanden<br>(19 bis 58 Jahre)",
+      "st2": "am Desktop",
+      "st3": "mobil<br>(7 Android, 2 iOS)",
+      "st4": "am Tablet",
+      "st5": "Teilgenommen haben 11 Frauen und 7 Männer. Alle Sessions fanden im Usability-Labor der RH Köln statt. Die Probanden konnten ein bereitgestelltes Gerät oder ihr eigenes Smartphone nutzen.",
+
+      "k0": "Diese Seite nutzt PostHog für datenschutzfreundliche Analysen, gehostet auf EU-Servern. <a href=\"https://sebastian-weber.github.io/uxui-portfolio/datenschutz.html\" target=\"_blank\">Datenschutzerklärung</a>",
+      "k1": "Ablehnen",
+      "k2": "Akzeptieren",
+      "k3": "Case Study · User Research",
+      "k4": "Usability-Test eines Multimedia-Storytelling-Tools",
+      "k5": "Lassen sich die interaktiven Seitentypen eines Multimedia-Storytelling-Tools intuitiv nutzen? Eine moderierte Usability-Studie mit 18 Probanden auf Desktop und Mobile zeigt, was ihnen leichtfiel und wo sie auf Schwierigkeiten stießen.",
+      "k6": "Projekt",
+      "k7": "Multimedia-Storytelling-Tool<br/>Masterprojekt, RH Köln (damals RFH)",
+      "k8": "Meine Rolle",
+      "k9": "Interviewleitfaden (Co-Autor), Moderation &amp; Protokoll<br/>Auswertung Nutzergruppen und Fragebogen",
+      "k10": "Methoden",
+      "k11": "Moderierter Usability-Test, Thinking Aloud<br/>Teilstrukturiertes Interview, Abschlussfragebogen",
+      "k12": "Zeitraum",
+      "k13": "2019<br/>Gruppenprojekt, Usability-Labor",
+      "k14": "01 · Kontext",
+      "k15": "Multimedia-Storytelling mit eigener Bedienlogik",
+      "k16": "Mit dem getesteten Tool veröffentlicht ein deutsches Medienunternehmen scrollbasierte Multimedia-Geschichten. Eine Geschichte kombiniert bis zu zehn Seitentypen: Hintergrundvideo, Collage, Video, Hintergrundbild, Text, Hotspots, Audio, Vorher/Nachher, 360°-Bild und eine Liste externer Verweise.",
+      "k17": "Im Rahmen einer Kooperation der Hochschule mit dem Unternehmen hat unsere Gruppe eine Beispielgeschichte zum Thema Streetfood getestet. Zwei Fragen leiteten die Studie:",
+      "k18": "02 · Methode",
+      "k19": "60 Minuten pro Person, vom Nutzungskontext bis zu Navigationsaufgaben",
+      "k20": "Jede Session wurde von zwei Studierenden durchgeführt: Eine Person moderierte, die andere protokollierte. Die Probanden dachten durchgehend laut. Der Leitfaden ging vom Offenen zum Konkreten:",
+      "k21": "Nutzungskontext · 10 Min.",
+      "k22": "Wie, wo, wie oft und auf welchem Gerät die Probanden längere Inhalte konsumieren.",
+      "k23": "Freie Exploration · 5 Min.",
+      "k24": "Erster Eindruck ohne Aufgabe, im Nutzungsszenario, das die Probanden zuvor als bevorzugt beschrieben hatten.",
+      "k25": "Seitentypen im Detail · 25 Min.",
+      "k26": "Eine kurze Aufgabe pro Seitentyp, danach Nachfragen dazu, was funktionierte und was nicht.",
+      "k27": "Globale Navigation · 10 Min.",
+      "k28": "Orientierungs- und Navigationsaufgaben: Kapitel 2 finden, Text ausblenden, Übersicht öffnen.",
+      "k29": "Nachbefragung &amp; Fragebogen",
+      "k30": "Wo und warum die Probanden abgebrochen hätten, beliebteste und unbeliebteste Seitentypen sowie Bewertungen auf einer Fünferskala zu Optik, Navigation, Lesbarkeit, Bezeichnungen, Erlernbarkeit und Geschwindigkeit.",
+      "k31": "Probanden",
+      "k32": "Geräte",
+      "k33": "Setting",
+      "k34": "18, zwischen 19 und 58 Jahren<br/>11 Frauen, 7 Männer",
+      "k35": "8 Desktop, 9 Mobile (7 Android, 2 iOS), 1 Tablet",
+      "k36": "Usability-Labor, RH Köln<br/>Eigene Smartphones erlaubt",
+      "k37": "Für die Auswertung wurden Insights pro Interview extrahiert und danach gewichtet, in wie vielen Sessions sie auftraten.",
+      "k38": "04 · Wo es hakte",
+      "k39": "Drei von vier Navigationsaufgaben scheiterten vor allem mobil",
+      "k40": "Die Seitentypen zu erkunden, machte den Probanden Spaß. Bei der globalen Navigation sah es anders aus. Anteil der Probanden, die die jeweilige Aufgabe nicht lösen konnten:",
+      "k41": "Text ausblenden",
+      "k42": "Übersicht öffnen",
+      "k43": "Eigene Position erkennen",
+      "k44": "Zu Kapitel 2 wechseln",
+      "k45": "Mobile",
+      "k46": "Kapitel ohne sichtbaren Anfang",
+      "k47": "Alle acht Probanden, die Kapitel 2 nicht erreichten, nutzten ein Mobilgerät. Wurde die Farbcodierung der Navigationsleiste nicht verstanden, markierte nichts sonst auf der Seite, wo ein Kapitel beginnt. Die meisten scrollten auf gut Glück weiter und gaben dann frustriert auf.",
+      "k48": "„Wo ist Kapitel 2?“ <span>W 32, Mobile</span>",
+      "k49": "Mobile",
+      "k50": "Eine Geste, von der niemand wusste",
+      "k51": "Mobil wird der Text per Wischen nach links ausgeblendet. Auf dem Bildschirm steht davon nichts. Zehn der zwölf gescheiterten Versuche fanden mobil statt, wo die Funktion nur durch Ausprobieren oder Zufall zu finden war. Zudem funktionierte sie nicht auf allen Seitentypen.",
+      "k52": "Alle Geräte",
+      "k53": "Eine Navigationsleiste, gelesen als Ladebalken",
+      "k54": "Die Hälfte der Probanden konnte nicht sagen, wo sie sich in der Geschichte befand. Die grüne Markierung des aktuellen Kapitels wurde als Fortschritts- oder Ladebalken gelesen.",
+      "k55": "„Wieso ist die eine Hälfte grün? Das könnte als Fortschrittsmarkierung missverstanden werden.“ <span>M 22, Desktop</span>",
+      "k56": "Seitentyp",
+      "k57": "Video hinter Text konkurriert mit dem Lesen",
+      "k58": "16 von 18 Probanden empfanden das Hintergrundvideo beim Lesen als störend. Es war zugleich der unbeliebteste Seitentyp. Autoplay, fehlende Pause und keine direkte Stummschaltung wurden wiederholt genannt.",
+      "k59": "„Es ist zu viel gleichzeitig. Ich brauche zum Lesen dreimal so lange wie normal.“ <span>Proband</span>",
+      "k60": "03 · Was funktioniert hat",
+      "k61": "Selbstbestimmte Seitentypen lagen vorn",
+      "k62": "Nach ihren Favoriten gefragt, nannten die Probanden <strong>Hotspots</strong> (9), <strong>Vorher/Nachher</strong> (7) und das <strong>360°-Bild</strong> (6), allesamt Seitentypen, bei denen die Lesenden selbst entscheiden, was sie als Nächstes ansehen. Die reine Textseite wurde als ruhig und aufgeräumt beschrieben. Insgesamt verstanden die Probanden das Grundkonzept und entdeckten gern versteckte Inhalte.",
+      "k63": "„Ich finde schön, dass ich selbst entscheiden kann, was ich mir zuerst angucke.“ <span>M 24</span>",
+      "k64": "05 · Erwartungen",
+      "k65": "Lesende wollten erst einen Überblick",
+      "k66": "Sieben Probanden vermissten eine Übersicht am Anfang, eine Art Inhaltsverzeichnis, um zu entscheiden, ob sich die Geschichte für sie lohnt. Unter denen, die ein mentales Modell beschrieben, wurde am häufigsten das Buch genannt, passend zum Wunsch nach mehr Informationstiefe.",
+      "k67": "„Worum geht es hier eigentlich? Was hab ich davon, mir das jetzt anzugucken?“ <span>W 54, Desktop</span>",
+      "k68": "Die Frage nach dem Abbruch bestätigte das: Nur 4 von 18 hätten sich die Geschichte zu Hause ohne Einschränkung komplett angesehen, 7 nur bei Interesse am Thema, 7 gar nicht. Als Abbruchgründe nannten sie Inhalt, Usability und Länge zu etwa gleichen Teilen.",
+      "k69": "Auf Wunsch des Auftraggebers haben wir auch den Begriff „Multimedia-Reportage“ getestet. 14 von 18 fanden ihn unpassend: „Multimedia“ wirkte veraltet, „Reportage“ klang nach einem Fernsehbeitrag statt nach etwas Interaktivem.",
+      "k70": "06 · Empfehlungen",
+      "k71": "Verstecktes sichtbar machen, zuerst auf Mobile",
+      "k73": "Empfehlung",
+      "k74": "Adressiert",
+      "k76": "Sichtbare Kapitelmarken in der mobilen Version ergänzen und die Kapitelnavigation vereinfachen",
+      "k77": "8/18 erreichten Kapitel 2 nicht",
+      "k79": "„Text ausblenden“ direkt auf der Seite mit sichtbarem Hinweis anbieten und dort deaktivieren, wo es nicht funktioniert",
+      "k80": "12/18 konnten den Text nicht ausblenden",
+      "k82": "Die Übersichtsseite mobil verfügbar machen und am Anfang ein Inhaltsverzeichnis ergänzen",
+      "k83": "10/18 konnten sie nicht öffnen; 7/18 wünschten sich eine Übersicht",
+      "k85": "Die Farbcodierung der Navigationsleiste so überarbeiten, dass sie als Position und nicht als Fortschritt gelesen wird",
+      "k86": "9/18 erkannten ihre Position nicht",
+      "k88": "Kein Autoplay mit Ton; Hintergrundvideo mit Pause und Stummschaltung ausstatten",
+      "k89": "16/18 empfanden es als störend",
+      "k91": "Calls to Action vom unteren in den oberen Bereich der Seitentypen verlegen; „Erste Seite“ in „Home“ umbenennen",
+      "k92": "Scroll-Hinweis zu klein und schlecht platziert",
+      "k93": "07 · Mein Anteil",
+      "k94": "Nutzergruppen und Abschlussfragebogen",
+      "k95": "Innerhalb der Gruppe habe ich die Struktur der Probanden und den Abschlussfragebogen ausgewertet und die Bewertungen nach Endgerät (Desktop vs. Mobile) und Altersgruppe (jünger vs. älter) verglichen.",
+      "k96": "Die Rekrutierung über persönliche Netzwerke führte zu einer jüngeren Stichprobe; ältere Probanden zu finden, die für eine Stunde ins Labor kommen, war die größte Hürde. Bei acht bis zehn Personen pro Gruppe dienten die Vergleiche als Richtungssignale, die zeigten, wo in den qualitativen Daten genauer hinzusehen war:",
+      "k97": "Ältere Probanden bewerteten Erlernbarkeit, Navigation und Optik tendenziell schlechter als jüngere.",
+      "k98": "Mobile Probanden empfanden Navigationsleiste und Icons als schwerer verständlich, was zu den gescheiterten Aufgaben oben passt.",
+      "k99": "Desktop-Probanden empfanden die Navigation durch den Inhalt als frustrierender.",
+      "k100": "08 · Reflexion",
+      "k101": "Was ich heute ergänzen würde",
+      "k102": "Die Stärke der Studie lag in ihrer Struktur: ein Leitfaden, eine Aufgabe pro Seitentyp und dieselben Navigationsaufgaben für alle Probanden. So ließen sich Fehlschläge direkt über die Geräte hinweg vergleichen. Heute würde ich die Findings zusätzlich nach Schweregrad bewerten, damit die Empfehlungen nach Wirkung und nicht nur nach Häufigkeit priorisiert sind, und Gruppenvergleiche so dimensionieren, dass sie die jeweilige Aussage tragen.",
+      "k103": "Am meisten würde ich den Schritt ergänzen, um den dieses Portfolio aufgebaut ist: die mobile Kapitelnavigation im Code prototypen und mit denselben Aufgaben erneut testen.",
+      "k104": "Alle Projekte",
+      "k105": "Zur Projektübersicht →",
+      "k106": "Sebastian Weber · UI Designer · Design-to-Code · Köln 2026",
+      "f-imprint": "Impressum &amp; Datenschutz",
+      "f-cookie": "Cookie-Einstellungen",
+      "callout1": "Lassen sich die Seitentypen intuitiv nutzen? Und auf welche Hindernisse stoßen Nutzende bei der Exploration?",
+      "sub-label": "Auf dieser Seite",
+      "nav-portfolio": "Portfolio",
+      "nav-about": "Über mich",
+      "nav-imprint": "Impressum",
+      "__title": "Case Study: Usability-Test eines Multimedia-Storytelling-Tools | Sebastian Weber"
+};
+    var cache = new Map();
+    var titleEN = document.title;
+    var currentLang = 'en';
+    try { currentLang = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) {}
+    function stripPrefix(t) { return t.replace(/^[0-9]+[a-z]?\s*[\u00b7\-]\s*/i, '').trim(); }
+    function apply() {
+      document.querySelectorAll('[data-de]').forEach(function (el) {
+        if (!cache.has(el)) cache.set(el, el.innerHTML);
+        var de = DE[el.getAttribute('data-de')];
+        el.innerHTML = (currentLang === 'de' && de !== undefined) ? de : cache.get(el);
+      });
+      document.querySelectorAll('.subnav a, .subnav-drawer-item').forEach(function (a) {
+        var block = document.getElementById(a.dataset.target);
+        var lbl = block && block.querySelector('.block-label');
+        if (lbl) a.textContent = stripPrefix(lbl.textContent);
+      });
+      var t = document.getElementById('navToggle'); if (t) t.setAttribute('aria-label', currentLang === 'de' ? 'Menü öffnen' : 'Open menu');
+      var c = document.getElementById('navDrawerClose'); if (c) c.setAttribute('aria-label', currentLang === 'de' ? 'Menü schließen' : 'Close menu');
+      document.documentElement.lang = currentLang;
+      document.title = currentLang === 'de' ? DE['__title'] : titleEN;
+      document.querySelectorAll('[data-lang]').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-lang') === currentLang);
+      });
+    }
+    window.switchLang = function (lang) {
+      if (lang !== 'en' && lang !== 'de') return;
+      currentLang = lang;
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      apply();
+    };
+    document.querySelectorAll('.lang-switch [data-lang]').forEach(function (b) {
+      b.addEventListener('click', function () { window.switchLang(b.getAttribute('data-lang')); });
+    });
+    apply();
+  })();
+  </script>
+</body>
+</html>
