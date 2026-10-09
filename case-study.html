@@ -117,22 +117,6 @@
     footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto; }
     footer p { font-size: 12px; color: var(--muted); margin: 0; }
 
-    #cookie-banner {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%);
-      background: #0F1117; color: #fff;
-      padding: 16px 24px; border-radius: 12px;
-      display: flex; align-items: center; gap: 16px;
-      z-index: 200; font-size: 13px;
-      max-width: 560px; width: calc(100% - 48px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    }
-    #cookie-banner p { margin: 0; flex: 1; color: #ccc; line-height: 1.5; }
-    #cookie-banner a { color: #fff; }
-    .cookie-btn { padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; white-space: nowrap; font-family: inherit; }
-    .cookie-accept { background: var(--coral); color: #fff; }
-    .cookie-decline { background: transparent; color: #ccc; border: 1px solid #555 !important; }
-
     @media (max-width: 860px) {
       nav { padding: 0 20px; } .hero { padding: 120px 20px 60px; } .content { padding: 0 20px 80px; }
       footer { padding: 24px 20px; flex-direction: column; gap: 8px; text-align: center; }
@@ -495,21 +479,6 @@
       if (e.key === 'Escape') closeLightbox();
     });
 
-    function decideConsent(accepted) {
-      document.getElementById('cookie-banner').style.display = 'none';
-      if (accepted) {
-        posthog.opt_in_capturing();
-      } else {
-        posthog.opt_out_capturing();
-      }
-      posthog.capture('cookie_consent', { accepted: accepted });
-    }
-
-    document.getElementById('cookie-settings-link').addEventListener('click', function (e) {
-      e.preventDefault();
-      document.getElementById('cookie-banner').style.display = 'flex';
-    });
-
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY;
       const total = document.body.scrollHeight - window.innerHeight;
@@ -644,9 +613,6 @@
       "st4": "am Tablet",
       "st5": "Teilgenommen haben 11 Frauen und 7 Männer. Alle Sessions fanden im Usability-Labor der RH Köln statt. Die Probanden konnten ein bereitgestelltes Gerät oder ihr eigenes Smartphone nutzen.",
 
-      "k0": "Diese Seite nutzt PostHog für datenschutzfreundliche Analysen, gehostet auf EU-Servern. <a href=\"https://sebastian-weber.github.io/uxui-portfolio/datenschutz.html\" target=\"_blank\">Datenschutzerklärung</a>",
-      "k1": "Ablehnen",
-      "k2": "Akzeptieren",
       "k3": "Case Study · User Research",
       "k4": "Usability-Test eines Multimedia-Storytelling-Tools",
       "k5": "Lassen sich die interaktiven Seitentypen eines Multimedia-Storytelling-Tools intuitiv nutzen? Eine moderierte Usability-Studie mit 18 Probanden auf Desktop und Mobile zeigt, was ihnen leichtfiel und wo sie auf Schwierigkeiten stießen.",
